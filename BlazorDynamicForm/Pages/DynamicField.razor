@@ -1,0 +1,23 @@
+﻿<div>
+    <label>@Caption</label>
+    @if (Value is String sValue)
+    {
+        <input type="text" value="@sValue" @onchange="OnChange" />
+    }
+    @if (Value is int iValue)
+    {
+        <input type="number" value="@iValue" @onchange="OnChange" />
+    }
+
+</div>
+
+@code {
+    [Parameter] public string Caption { get; set; }
+    [Parameter] public object Value { get; set; }
+    [Parameter] public EventCallback<object> ValueChanged { get; set; }
+
+    async void OnChange(ChangeEventArgs e)
+    {
+        await ValueChanged.InvokeAsync(e.Value);
+    }
+}

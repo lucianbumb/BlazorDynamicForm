@@ -1,0 +1,29 @@
+﻿@page "/"
+
+<h1>Dynamic form example</h1>
+
+<div style="display:flex">
+    <div>
+        <DynamicForm @bind-Model="MySensorType"/>
+    </div>
+
+    <div style="background:yellow;flex:1;margin:20px;">
+        <p>Id: @MySensorType.Id</p>
+        <p>Name: @MySensorType.Name</p>
+        <p>Description: @MySensorType.Description</p>
+        <p>Url: @MySensorType.DatasheetUrl</p>
+    </div>
+</div>
+
+@code {
+    public SensorType MySensorType { get; set; } = new SensorType();
+
+
+    public class SensorType
+    {
+        public int Id { get; set; } = 1;
+        public string Name { get; set; } = "Some Name";
+        public string Description { get; set; } = "Some Description";
+        public string DatasheetUrl { get; set; } = "This is a URL";
+    }
+}

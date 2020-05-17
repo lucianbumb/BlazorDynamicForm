@@ -1,0 +1,42 @@
+﻿@typeparam T
+
+
+@foreach (var p in Properties)
+{
+    <DynamicField Value="@p.Value" 
+                  Caption="@p.Key" 
+                  ValueChanged="@((e)=>OnValueChanged(e,p.Key))" />
+}
+
+
+@code{
+    [Parameter] public T Model { get; set; }
+    [Parameter] public EventCallback<T> ModelChanged { get; set; }
+
+    public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
+
+    protected override void OnInitialized()
+    {
+        var props = Model.GetType().GetProperties();
+        foreach (var p in props)
+        {
+            Properties.Add(p.Name, p.GetValue(Model));
+        }
+    }
+
+    void OnValueChanged(object e, string prop)
+    {
+        var p = Model.GetType().GetProperty(prop);
+        if (p.PropertyType == typeof(int))
+        {
+            var intValue = Convert.ToInt32(e);
+            p.SetValue(Model, intValue);
+        }
+        if (p.PropertyType == typeof(string))
+        {
+            p.SetValue(Model, e.ToString());
+        }
+
+        ModelChanged.InvokeAsync(Model);
+    }
+}
